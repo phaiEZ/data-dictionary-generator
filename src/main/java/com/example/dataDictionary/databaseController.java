@@ -33,6 +33,7 @@ public class databaseController {
                     System.out.println(resultSet.getString(1));
                 }
 
+                createDocx.createDocument();
                 return "success";
             }
 
