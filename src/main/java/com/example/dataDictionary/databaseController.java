@@ -10,6 +10,7 @@ import java.util.List;
 
 @Controller
 public class databaseController {
+
     @PostMapping("/upload")
     public String handleFormSubmission(@RequestParam("username") String username,
                                        @RequestParam("password") String password,
