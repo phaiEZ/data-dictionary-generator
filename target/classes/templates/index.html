@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generate Data Dictionary</title>
+    <style>
+        .form-row {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .form-row label {
+            width: 120px;
+        }
+
+        .form-row input[type="text"],
+        .form-row input[type="password"] {
+            width: 250px;
+        }
+
+        .submit-button {
+            margin-left: 170px;
+        }
+    </style>
+</head>
+<body>
+<h1>Generate Data Dictionary</h1>
+
+<form action="/upload" method="POST" enctype="multipart/form-data">
+    <div class="form-row">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required>
+    </div>
+
+    <div class="form-row">
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required>
+    </div>
+
+    <div class="form-row">
+        <label for="server">Server Host:</label>
+        <input type="text" id="server" name="server" required>
+    </div>
+
+    <div class="form-row">
+        <label for="port">Port:</label>
+        <input type="text" id="port" name="port" required>
+    </div>
+
+    <div class="form-row">
+        <label for="database">Database:</label>
+        <input type="text" id="database" name="database" required>
+    </div>
+
+    <br><br>
+
+    <button type="submit" class="submit-button">Submit</button>
+</form>
+</body>
+</html>

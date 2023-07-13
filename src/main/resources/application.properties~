@@ -1,0 +1,8 @@
+#logging.level.org.springframework=DEBUG
+
+spring.thymeleaf.prefix=classpath:/templates/
+spring.thymeleaf.suffix=.html
+spring.thymeleaf.cache=false
+
+spring.datasource.username=[username]
+spring.datasource.password=[password]
