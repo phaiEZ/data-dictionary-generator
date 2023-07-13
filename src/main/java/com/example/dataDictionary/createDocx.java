@@ -1,15 +1,10 @@
 package com.example.dataDictionary;
-
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
 import org.apache.poi.xwpf.usermodel.*;
 import java.io.FileOutputStream;
 import java.io.IOException;
 
-@RestController
 public class createDocx {
-    @GetMapping("/test")
-    public static void main(String[] args) {
+    public static void createDocument() {
         XWPFDocument document = new XWPFDocument();
 
         // Create a table with 2 rows and 3 columns
@@ -39,6 +34,9 @@ public class createDocx {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    public static void main(String[] args) {
+        createDocument();
     }
 
 }
