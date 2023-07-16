@@ -20,6 +20,7 @@ public class databaseController {
                                        Model model) {
 
         String dbUrl = "jdbc:mysql://" + server + ":" + port + "/" + database;
+        List<ColumnData> columnDataList = new ArrayList<>(); // Create a list to store the column data
 
         try (Connection connection = DriverManager.getConnection(dbUrl, username, password)) {
 
@@ -31,6 +32,17 @@ public class databaseController {
 
                 while (resultSet.next()) {
                     System.out.println(resultSet.getString(1));
+                    String tableName = resultSet.getString("TABLE_NAME");
+                    String columnName = resultSet.getString("COLUMN_NAME");
+                    String dataType = resultSet.getString("DATA_TYPE");
+                    String columnType = resultSet.getString("COLUMN_TYPE");
+                    String columnKey = resultSet.getString("COLUMN_KEY");
+                    String isNullable = resultSet.getString("IS_NULLABLE");
+                    String columnDefault = resultSet.getString("COLUMN_DEFAULT");
+
+                    ColumnData columnData = new ColumnData(tableName, columnName, dataType, columnType, columnKey, isNullable, columnDefault);
+
+                    columnDataList.add(columnData);
                 }
 
                 createDocx.createDocument();
