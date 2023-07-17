@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-// AAAAA
+
 @Controller
 public class databaseController {
 
@@ -20,7 +20,7 @@ public class databaseController {
                                        Model model) {
 
         String dbUrl = "jdbc:mysql://" + server + ":" + port + "/" + database;
-        List<ColumnData> columnDataList = new ArrayList<>(); // Create a list to store the column data
+        List<ColumnData> columnDataList = new ArrayList<>();
 
         try (Connection connection = DriverManager.getConnection(dbUrl, username, password)) {
 
