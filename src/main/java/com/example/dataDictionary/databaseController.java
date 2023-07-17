@@ -22,6 +22,7 @@ public class databaseController {
         String dbUrl = "jdbc:mysql://" + server + ":" + port + "/" + database;
         List<ColumnData> columnDataList = new ArrayList<>();
 
+        createDocx.createDocument();
         try (Connection connection = DriverManager.getConnection(dbUrl, username, password)) {
 
             String selectQuery = "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, COLUMN_TYPE, COLUMN_KEY, IS_NULLABLE, COLUMN_DEFAULT " +

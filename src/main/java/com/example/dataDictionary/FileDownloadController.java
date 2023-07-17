@@ -21,7 +21,7 @@ public class FileDownloadController {
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", "Sample_Revision_Sheet.docx");
+        headers.setContentDispositionFormData("attachment", "File.docx");
         headers.setContentLength(fileContent.length);
 
         return ResponseEntity.ok().headers(headers).body(fileContent);
