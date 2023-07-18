@@ -9,8 +9,10 @@ public class ColumnData {
     private String isNullable;
     private String columnDefault;
 
+    private String comment;
+
     public ColumnData(String tableName, String columnName, String dataType, String columnType,
-                      String columnKey, String isNullable, String columnDefault) {
+                      String columnKey, String isNullable, String columnDefault, String comment) {
         this.tableName = tableName;
         this.columnName = columnName;
         this.dataType = dataType;
@@ -18,6 +20,7 @@ public class ColumnData {
         this.columnKey = columnKey;
         this.isNullable = isNullable;
         this.columnDefault = columnDefault;
+        this.comment = comment;
     }
 
     public String getTableName() {
@@ -74,6 +77,14 @@ public class ColumnData {
 
     public void setColumnDefault(String columnDefault) {
         this.columnDefault = columnDefault;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void getComment(String comment) {
+        this.comment = comment;
     }
 }
 
