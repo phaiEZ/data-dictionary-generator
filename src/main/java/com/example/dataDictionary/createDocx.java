@@ -1,15 +1,15 @@
 package com.example.dataDictionary;
-
 import org.apache.poi.xwpf.usermodel.*;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.File;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+
+import java.io.ByteArrayOutputStream;
 
 public class createDocx {
-    public static void createDocument(String[][][] tableDataList) {
-
+    public static ResponseEntity<byte[]> createDocument(String[][][] tableDataList) {
         try (XWPFDocument document = new XWPFDocument()) {
-
             for (String[][] data : tableDataList) {
                 String tableName = data[0][0];
 
@@ -38,18 +38,27 @@ public class createDocx {
                 space.setSpacingAfter(500);
             }
 
-            String filePath = "src/main/resources/templates/file.docx";
-            File file = new File(filePath);
-            file.delete();
-
-            try (FileOutputStream out = new FileOutputStream(filePath)) {
+            try (ByteArrayOutputStream out = new ByteArrayOutputStream()) {
                 document.write(out);
                 System.out.println("Document created successfully!");
+
+                byte[] fileContent = out.toByteArray();
+
+                HttpHeaders headers = new HttpHeaders();
+                headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
+                headers.setContentDispositionFormData("attachment", "file.docx");
+                headers.setContentLength(fileContent.length);
+
+                return ResponseEntity.ok()
+                        .headers(headers)
+                        .body(fileContent);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+        return ResponseEntity.notFound().build();
     }
 }
