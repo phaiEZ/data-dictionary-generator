@@ -16,6 +16,7 @@ public class createDocx {
                 XWPFParagraph tableNameParagraph = document.createParagraph();
                 XWPFRun tableNameRun = tableNameParagraph.createRun();
                 tableNameRun.setText(tableName);
+                tableNameParagraph.setSpacingAfter(200);
 
                 XWPFTable table = document.createTable(data.length - 1, data[1].length);
 
@@ -32,6 +33,9 @@ public class createDocx {
                         cell.setText(data[row][col]);
                     }
                 }
+
+                XWPFParagraph space = document.createParagraph();
+                space.setSpacingAfter(500);
             }
 
             String filePath = "src/main/resources/templates/file.docx";

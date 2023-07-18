@@ -24,52 +24,80 @@ public class databaseController {
         String dbUrl = "jdbc:mysql://" + server + ":" + port + "/" + database;
 
         try (Connection connection = DriverManager.getConnection(dbUrl, username, password)) {
-            String selectQuery = "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, COLUMN_TYPE, COLUMN_KEY, IS_NULLABLE, COLUMN_DEFAULT " +
-                    "FROM information_schema.columns WHERE TABLE_SCHEMA = ?";
+            String selectQuery = "SELECT TABLE_NAME, TABLE_COMMENT FROM information_schema.TABLES WHERE TABLE_SCHEMA = ?";
 
             try (PreparedStatement preparedStatement = connection.prepareStatement(selectQuery)) {
                 preparedStatement.setString(1, database);
 
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    Map<String, List<String[]>> tableDataMap = new HashMap<>();
-
+                    // Fetch table names and comments from the database
+                    List<String[]> tableInfoList = new ArrayList<>();
                     while (resultSet.next()) {
                         String tableName = resultSet.getString("TABLE_NAME");
-                        String columnName = resultSet.getString("COLUMN_NAME");
-                        String dataType = resultSet.getString("DATA_TYPE");
-                        String columnType = resultSet.getString("COLUMN_TYPE");
-                        String columnKey = resultSet.getString("COLUMN_KEY");
-                        String isNullable = resultSet.getString("IS_NULLABLE");
-                        String columnDefault = resultSet.getString("COLUMN_DEFAULT");
+                        String tableComment = resultSet.getString("TABLE_COMMENT");
 
-                        String[] rowData = { columnName, dataType, isNullable, columnDefault, columnType };
-
-                        tableDataMap.computeIfAbsent(tableName, k -> new ArrayList<>()).add(rowData);
+                        tableInfoList.add(new String[]{tableName, tableComment});
                     }
 
-                    String[][][] tableData = new String[tableDataMap.size()][][];
+                    // Fetch individual column information from the database as before
+                    String selectColumnsQuery = "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, COLUMN_TYPE, COLUMN_KEY, IS_NULLABLE, COLUMN_DEFAULT " +
+                            "FROM information_schema.columns WHERE TABLE_SCHEMA = ?";
+                    try (PreparedStatement columnsPreparedStatement = connection.prepareStatement(selectColumnsQuery)) {
+                        columnsPreparedStatement.setString(1, database);
 
-                    int i = 0;
-                    for (String tableName : tableDataMap.keySet()) {
-                        List<String[]> rowDataList = tableDataMap.get(tableName);
-                        int numRows = rowDataList.size() + 2;
-                        int numCols = rowDataList.get(0).length;
+                        try (ResultSet columnsResultSet = columnsPreparedStatement.executeQuery()) {
+                            Map<String, List<String[]>> tableDataMap = new HashMap<>();
 
-                        tableData[i] = new String[numRows][numCols];
+                            while (columnsResultSet.next()) {
+                                String tableName = columnsResultSet.getString("TABLE_NAME");
+                                String columnName = columnsResultSet.getString("COLUMN_NAME");
+                                String dataType = columnsResultSet.getString("DATA_TYPE");
+                                String columnType = columnsResultSet.getString("COLUMN_TYPE");
+                                String columnKey = columnsResultSet.getString("COLUMN_KEY");
+                                String isNullable = columnsResultSet.getString("IS_NULLABLE");
+                                String columnDefault = columnsResultSet.getString("COLUMN_DEFAULT");
 
-                        tableData[i][0][0] = tableName;
+                                String[] rowData = {columnName, dataType, isNullable, columnDefault, columnType};
 
-                        String[] headers = { "COLUMN", "TYPE", "NULL", "DEFAULT", "COMMENT" };
-                        tableData[i][1] = headers;
+                                tableDataMap.computeIfAbsent(tableName, k -> new ArrayList<>()).add(rowData);
+                            }
 
-                        for (int j = 0; j < rowDataList.size(); j++) {
-                            tableData[i][j + 2] = rowDataList.get(j);
+                            // Convert the tableDataMap to the desired format (3D array)
+                            String[][][] tableData = new String[tableDataMap.size() + 1][][];
+                            int i = 0;
+
+                            // Add the new table data (table names and comments)
+                            String[][] tableInfoData = new String[tableInfoList.size() + 1][2];
+                            tableInfoData[0] = new String[]{"Table ใน " + database};
+
+                            for (int j = 0; j < tableInfoList.size(); j++) {
+                                tableInfoData[j + 1] = tableInfoList.get(j);
+                            }
+                            tableData[i++] = tableInfoData;
+
+                            // Add the existing individual column information
+                            for (String tableName : tableDataMap.keySet()) {
+                                List<String[]> rowDataList = tableDataMap.get(tableName);
+                                int numRows = rowDataList.size() + 2;
+                                int numCols = rowDataList.get(0).length;
+
+                                tableData[i] = new String[numRows][numCols];
+
+                                tableData[i][0][0] = "Table : "+ tableName;
+
+                                String[] headers = {"COLUMN", "TYPE", "NULL", "DEFAULT", "COMMENT"};
+                                tableData[i][1] = headers;
+
+                                for (int j = 0; j < rowDataList.size(); j++) {
+                                    tableData[i][j + 2] = rowDataList.get(j);
+                                }
+
+                                i++;
+                            }
+
+                            createDocx.createDocument(tableData);
                         }
-
-                        i++;
                     }
-
-                    createDocx.createDocument(tableData);
                 }
             }
 
@@ -80,6 +108,7 @@ public class databaseController {
 
         return "error";
     }
+
 
 
 }
