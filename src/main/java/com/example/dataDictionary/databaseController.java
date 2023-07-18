@@ -70,7 +70,7 @@ public class databaseController {
                             String[][] tableInfoData = new String[tableInfoList.size() + 1][2];
                             tableInfoData[0] = new String[]{"Table ใน " + database};
 
-                            String[] headerAllTable = {"COLUMN", "TYPE", "NULL", "DEFAULT", "COMMENT"};
+                            String[] headerAllTable = {"TABLE_NAME", "TABLE_COMMENT"};
                             tableInfoData[1] = headerAllTable;
                             
                             for (int j = 2; j < tableInfoList.size(); j++) {
