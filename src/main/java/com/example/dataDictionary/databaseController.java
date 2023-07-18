@@ -40,7 +40,7 @@ public class databaseController {
                     }
 
                     // Fetch individual column information from the database as before
-                    String selectColumnsQuery = "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, COLUMN_TYPE, COLUMN_KEY, IS_NULLABLE, COLUMN_DEFAULT " +
+                    String selectColumnsQuery = "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, COLUMN_TYPE, COLUMN_KEY, IS_NULLABLE, COLUMN_DEFAULT, TABLE_COMMENT " +
                             "FROM information_schema.columns WHERE TABLE_SCHEMA = ?";
                     try (PreparedStatement columnsPreparedStatement = connection.prepareStatement(selectColumnsQuery)) {
                         columnsPreparedStatement.setString(1, database);
@@ -56,8 +56,9 @@ public class databaseController {
                                 String columnKey = columnsResultSet.getString("COLUMN_KEY");
                                 String isNullable = columnsResultSet.getString("IS_NULLABLE");
                                 String columnDefault = columnsResultSet.getString("COLUMN_DEFAULT");
+                                String comment = columnsResultSet.getString("TABLE_COMMENT");
 
-                                String[] rowData = {columnName, dataType, isNullable, columnDefault, columnType};
+                                String[] rowData = {columnName, dataType, isNullable, columnDefault, comment};
 
                                 tableDataMap.computeIfAbsent(tableName, k -> new ArrayList<>()).add(rowData);
                             }
@@ -70,7 +71,7 @@ public class databaseController {
                             String[][] tableInfoData = new String[tableInfoList.size() + 1][2];
                             tableInfoData[0] = new String[]{"Table ใน " + database};
 
-                            String[] headerAllTable = {"TABLE_NAME", "TABLE_COMMENT"};
+                            String[] headerAllTable = {"COLUMN", "TYPE", "NULL", "DEFAULT", "COMMENT"};
                             tableInfoData[1] = headerAllTable;
                             
                             for (int j = 2; j < tableInfoList.size(); j++) {
