@@ -16,12 +16,12 @@ public class FileDownloadController {
 
     @GetMapping("/download")
     public ResponseEntity<byte[]> downloadFile() throws IOException {
-        ClassPathResource resource = new ClassPathResource("templates/file.docx");
+        ClassPathResource resource = new ClassPathResource("src/main/resources/templates/file.docx");
         byte[] fileContent = Files.readAllBytes(Path.of(resource.getURI()));
 
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_OCTET_STREAM);
-        headers.setContentDispositionFormData("attachment", "File.docx");
+        headers.setContentDispositionFormData("attachment", "file.docx");
         headers.setContentLength(fileContent.length);
 
         return ResponseEntity.ok().headers(headers).body(fileContent);
