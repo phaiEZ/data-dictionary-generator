@@ -31,7 +31,6 @@ public class databaseController {
                 preparedStatement.setString(1, database);
 
                 try (ResultSet resultSet = preparedStatement.executeQuery()) {
-                    // Fetch table names and comments from the database
                     List<String[]> tableInfoList = new ArrayList<>();
                     while (resultSet.next()) {
                         String tableName = resultSet.getString("TABLE_NAME");
@@ -40,7 +39,6 @@ public class databaseController {
                         tableInfoList.add(new String[]{tableName, tableComment});
                     }
 
-                    // Fetch individual column information from the database as before
                     String selectColumnsQuery = "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, COLUMN_TYPE, COLUMN_KEY, IS_NULLABLE, COLUMN_DEFAULT,COLUMN_COMMENT " +
                             "FROM information_schema.columns WHERE TABLE_SCHEMA = ?";
                     try (PreparedStatement columnsPreparedStatement = connection.prepareStatement(selectColumnsQuery)) {
@@ -64,11 +62,9 @@ public class databaseController {
                                 tableDataMap.computeIfAbsent(tableName, k -> new ArrayList<>()).add(rowData);
                             }
 
-                            // Convert the tableDataMap to the desired format (3D array)
                             String[][][] tableData = new String[tableDataMap.size() + 1][][];
                             int i = 0;
 
-                            // Add the new table data (table names and comments)
                             String[][] tableInfoData = new String[tableInfoList.size() + 1][2];
                             tableInfoData[0] = new String[]{"Table ใน " + database};
 
@@ -80,7 +76,6 @@ public class databaseController {
                             }
                             tableData[i++] = tableInfoData;
 
-                            // Add the existing individual column information
                             for (String tableName : tableDataMap.keySet()) {
                                 List<String[]> rowDataList = tableDataMap.get(tableName);
                                 int numRows = rowDataList.size() + 2;
@@ -105,16 +100,9 @@ public class databaseController {
                     }
                 }
             }
-
-//            return "success";
         } catch (SQLException e) {
             e.printStackTrace();
         }
-
-//        return "error";
         return ResponseEntity.internalServerError().build();
     }
-
-
-
 }
