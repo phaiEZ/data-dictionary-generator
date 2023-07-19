@@ -1,5 +1,6 @@
 package com.example.dataDictionary;
 import io.r2dbc.spi.ColumnMetadata;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,12 +15,12 @@ import java.util.Map;
 public class databaseController {
 
     @PostMapping("/upload")
-    public String handleFormSubmission(@RequestParam("username") String username,
-                                       @RequestParam("password") String password,
-                                       @RequestParam("server") String server,
-                                       @RequestParam("port") String port,
-                                       @RequestParam("database") String database,
-                                       Model model) {
+    public ResponseEntity<byte[]> handleFormSubmission(@RequestParam("username") String username,
+                                                 @RequestParam("password") String password,
+                                                 @RequestParam("server") String server,
+                                                 @RequestParam("port") String port,
+                                                 @RequestParam("database") String database,
+                                                 Model model) {
 
         String dbUrl = "jdbc:mysql://" + server + ":" + port + "/" + database;
 
@@ -40,7 +41,7 @@ public class databaseController {
                     }
 
                     // Fetch individual column information from the database as before
-                    String selectColumnsQuery = "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, COLUMN_TYPE, COLUMN_KEY, IS_NULLABLE, COLUMN_DEFAULT " +
+                    String selectColumnsQuery = "SELECT TABLE_NAME, COLUMN_NAME, DATA_TYPE, COLUMN_TYPE, COLUMN_KEY, IS_NULLABLE, COLUMN_DEFAULT,COLUMN_COMMENT " +
                             "FROM information_schema.columns WHERE TABLE_SCHEMA = ?";
                     try (PreparedStatement columnsPreparedStatement = connection.prepareStatement(selectColumnsQuery)) {
                         columnsPreparedStatement.setString(1, database);
@@ -56,9 +57,9 @@ public class databaseController {
                                 String columnKey = columnsResultSet.getString("COLUMN_KEY");
                                 String isNullable = columnsResultSet.getString("IS_NULLABLE");
                                 String columnDefault = columnsResultSet.getString("COLUMN_DEFAULT");
-//                                String comment = columnsResultSet.getString("TABLE_COMMENT");
+                                String comment = columnsResultSet.getString("COLUMN_COMMENT");
 
-                                String[] rowData = {columnName, dataType, isNullable, columnDefault, columnType};
+                                String[] rowData = {columnName, dataType, isNullable, columnDefault, comment};
 
                                 tableDataMap.computeIfAbsent(tableName, k -> new ArrayList<>()).add(rowData);
                             }
@@ -99,18 +100,19 @@ public class databaseController {
                                 i++;
                             }
 
-                            createDocx.createDocument(tableData);
+                            return createDocx.createDocument(tableData);
                         }
                     }
                 }
             }
 
-            return "success";
+//            return "success";
         } catch (SQLException e) {
             e.printStackTrace();
         }
 
-        return "error";
+//        return "error";
+        return ResponseEntity.internalServerError().build();
     }
 
 
