@@ -57,7 +57,7 @@ public class databaseController {
                                 String columnDefault = columnsResultSet.getString("COLUMN_DEFAULT");
                                 String comment = columnsResultSet.getString("COLUMN_COMMENT");
 
-                                String[] rowData = {columnName, dataType, isNullable, columnDefault, comment};
+                                String[] rowData = {columnName, columnType, isNullable, columnDefault, comment};
 
                                 tableDataMap.computeIfAbsent(tableName, k -> new ArrayList<>()).add(rowData);
                             }
