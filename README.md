@@ -47,7 +47,7 @@ docker run -p 8080:8080 data-dictionary-app
 
 - 
 - 
-- Tunyarat Nitihirunpattana
+- Tunyarat Nitihirunpattana (tunyarat.nit@student.mahidol.edu)
 
 Feel free to fork the repository, make improvements, and create a pull request. We welcome contributions from the open-source community.
 
