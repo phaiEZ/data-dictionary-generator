@@ -95,6 +95,7 @@
 				</configuration>
 			</plugin>
 		</plugins>
+		<finalName>data-dictionary-generator</finalName>
 	</build>
 
 </project>
