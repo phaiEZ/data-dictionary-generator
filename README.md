@@ -45,9 +45,9 @@ docker run -p 8080:8080 data-dictionary-app
 
 ## Contributor
 
-- 
-- 
-- 
+- (Chayutmail@gmail.com)
+- Sornvisit Chanpen (notebook.2brother@gmail.com)
+- Tunyarat Nitihirunpattana (tunyarat122345@gmail.com)
 
 Feel free to fork the repository, make improvements, and create a pull request. We welcome contributions from the open-source community.
 
