@@ -12,7 +12,7 @@ import java.util.List;
 import java.util.Map;
 
 @Controller
-public class databaseController {
+public class DatabaseController {
 
     @PostMapping("/upload")
     public ResponseEntity<byte[]> handleFormSubmission(@RequestParam("username") String username,
@@ -95,7 +95,7 @@ public class databaseController {
                                 i++;
                             }
 
-                            return createDocx.createDocument(tableData);
+                            return CreateDocx.createDocument(tableData);
                         }
                     }
                 }

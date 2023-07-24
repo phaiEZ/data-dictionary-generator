@@ -7,7 +7,7 @@ import org.springframework.http.ResponseEntity;
 
 import java.io.ByteArrayOutputStream;
 
-public class createDocx {
+public class CreateDocx {
     public static ResponseEntity<byte[]> createDocument(String[][][] tableDataList) {
         try (XWPFDocument document = new XWPFDocument()) {
             for (String[][] data : tableDataList) {
